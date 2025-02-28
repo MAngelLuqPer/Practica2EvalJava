@@ -28,6 +28,7 @@
             <br>
             <input type="submit" value="Registrar cuenta">
         </form>
+        <a href="${pageContext.request.contextPath}/ControladorLogin">Identificarse</a>
         <c:if test="${not empty error}">
             <div class="error">${error}</div>
         </c:if>

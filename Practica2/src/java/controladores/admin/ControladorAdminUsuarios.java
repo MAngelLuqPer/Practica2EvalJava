@@ -2,36 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controladores.usuario;
+package controladores.admin;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.entidades.Usuario;
+import modelo.servicio.ServicioUsuario;
 
 /**
  *
  * @author mangel
  */
-@WebServlet(name = "ControladorInicio", urlPatterns = {"/usuario/ControladorInicio"})
-public class ControladorInicio extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            getServletContext().getRequestDispatcher("/usuario/inicio.jsp").forward(request, response);
-    }
+@WebServlet(name = "ControladorAdminUsuarios", urlPatterns = {"/admin/ControladorAdminUsuarios"})
+public class ControladorAdminUsuarios extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -45,7 +35,19 @@ public class ControladorInicio extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+       EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
+       ServicioUsuario su = new ServicioUsuario(emf);
+       if (request.getParameter("id") == null) { //Si no se ha pulsado en editar...
+       List<Usuario> listaUsuarios = su.findUsuarioEntities();
+       request.setAttribute("listaUsuarios", listaUsuarios);
+       getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
+       } else {
+           long id = Long.parseLong(request.getParameter("id"));
+           Usuario usuEditar = su.findUsuario(id);
+           request.setAttribute("usuEditar", usuEditar);
+           getServletContext().getRequestDispatcher("/admin/editarUsuario.jsp").forward(request, response);
+    
+       }
     }
 
     /**
@@ -59,7 +61,6 @@ public class ControladorInicio extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**

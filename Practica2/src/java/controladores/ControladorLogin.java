@@ -65,6 +65,7 @@ public class ControladorLogin extends HttpServlet {
                 } else {
                  HttpSession sesion = request.getSession();
                  sesion.setAttribute("usuario",usu);
+                 //Uso de la ruta modificada del @WebServlet
                  response.sendRedirect("usuario/ControladorInicio");
                  return;
                  }
