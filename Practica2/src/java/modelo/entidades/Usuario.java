@@ -23,7 +23,7 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(length = 20, nullable = false)
+    @Column(length = 60, nullable = false)
     private String email;
     @Column(length = 30, nullable = false)
     private String password;
@@ -33,6 +33,7 @@ public class Usuario implements Serializable {
     private String apellidos;
     @Column(length = 20, nullable = false)
     //CUIDADO, PUEDE PRODUCIR PROBLEMAS A FUTURO
+    //Los usuarios seran: normal o admin
     private String tipo = "normal";
     @Column(nullable = false)
     private boolean activo = false;

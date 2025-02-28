@@ -23,7 +23,7 @@
             <br>
             <input type="submit" value="Iniciar Sesión">
         </form>
-        <a href="./registro.jsp">¿No tienes cuenta? Registrese</a>
+        <a href="${pageContext.request.contextPath}/ControladorRegister">¿No tienes cuenta? Registrese</a>
         <br>
         <c:if test="${not empty error}">
             <div class="error">${error}</div>

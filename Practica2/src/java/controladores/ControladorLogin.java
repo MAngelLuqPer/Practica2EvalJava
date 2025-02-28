@@ -53,16 +53,21 @@ public class ControladorLogin extends HttpServlet {
          String error = "";
          if (email == null || pwd == null || email.isEmpty() || pwd.isEmpty()) {
              error = "Contraseña y email obligatorios ";
-         } else {
+         }
+         else {
              EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
              ServicioUsuario su = new ServicioUsuario(emf);
              Usuario usu = su.validarUsuario(email, pwd);
              emf.close();
              if (usu != null) {
+                if (!usu.isActivo()) {
+                 error = "El usuario debe de ser activado por un administrador antes. Contacte con el departamento de administacion";
+                } else {
                  HttpSession sesion = request.getSession();
                  sesion.setAttribute("usuario",usu);
                  response.sendRedirect("usuario/ControladorInicio");
                  return;
+                 }
              } else {
                  error = "El usuario introducido no existe";
              }
