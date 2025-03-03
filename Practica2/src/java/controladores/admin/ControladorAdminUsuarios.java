@@ -4,8 +4,11 @@
  */
 package controladores.admin;
 
+import Utilidades.Utilidades;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -13,8 +16,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.entidades.Email;
 import modelo.entidades.Usuario;
 import modelo.servicio.ServicioUsuario;
+import modelo.servicio.exceptions.NonexistentEntityException;
 
 /**
  *
@@ -37,16 +42,30 @@ public class ControladorAdminUsuarios extends HttpServlet {
             throws ServletException, IOException {
        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
        ServicioUsuario su = new ServicioUsuario(emf);
-       if (request.getParameter("id") == null) { //Si no se ha pulsado en editar...
+       if (request.getParameter("accion") == null) { //Si no se ha pulsado en editar...
        List<Usuario> listaUsuarios = su.findUsuarioEntities();
        request.setAttribute("listaUsuarios", listaUsuarios);
        getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
-       } else {
+       } else if (request.getParameter("accion").equals("editar")){
            long id = Long.parseLong(request.getParameter("id"));
            Usuario usuEditar = su.findUsuario(id);
            request.setAttribute("usuEditar", usuEditar);
+           request.getSession().setAttribute("usuEditar", usuEditar);
            getServletContext().getRequestDispatcher("/admin/editarUsuario.jsp").forward(request, response);
-    
+       } else {
+           long id = Long.parseLong(request.getParameter("id"));
+           String msg = "";
+           try {
+               su.destroy(id);
+               msg = "El usuario se ha borrado correctamente.";
+           } catch (NonexistentEntityException ex) {
+               Logger.getLogger(ControladorAdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+               msg = "Error al borrar el usuario";
+           }
+           List<Usuario> listaUsuarios = su.findUsuarioEntities();
+           request.setAttribute("listaUsuarios", listaUsuarios);
+           request.setAttribute("msg",msg);
+           getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
        }
     }
 
@@ -61,6 +80,54 @@ public class ControladorAdminUsuarios extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            Usuario usuEditado = (Usuario) request.getSession().getAttribute("usuEditar");
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
+            ServicioUsuario su = new ServicioUsuario(emf);
+            String msg = "";
+            if (usuEditado != null) {
+
+                String nombre = request.getParameter("nombre");
+                String apellidos = request.getParameter("apellidos");
+                String pwd = request.getParameter("pwd");
+                boolean activo = false;
+                if (request.getParameter("activo") != null) {
+                    activo = true;
+                }
+                boolean estadoAnterior = usuEditado.isActivo();
+                usuEditado.setNombre(nombre);
+                usuEditado.setApellidos(apellidos);
+                usuEditado.setPassword(pwd);
+                usuEditado.setActivo(activo);
+                    if (!estadoAnterior && activo) {
+                     Email email = new Email();
+                     email.setTo(usuEditado.getEmail());
+                     email.setSubject("Cuenta activada correctamente");
+                     email.setText("Su cuenta de JavaTraveling se ha activado correctamente. ¡Disfrute de su experiencia en esta red social "+usuEditado.getNombre()+ "!");
+                     email.setFrom("luque.perez.miguel.angel@iescamas.es");
+                     Utilidades u = new Utilidades();
+                     System.out.println("El email se ha enviado correctamente");
+                    try {
+                     u.enviarEmail(email, "bdty fsds qfmz oyze");
+                    } catch (Throwable e) {
+                        System.out.println("\"Error al enviar e-mail: <br>\" + e.getClass().getName() + \":\" + \n" +
+"                                e.getMessage()");
+                    }
+                   }
+                
+                try {
+                    su.edit(usuEditado);
+                    msg = "Usuario editado correctamente.";
+                } catch (Exception ex) {
+                    msg = "Error al editar el usuario: "+ex;
+                }
+                request.getSession().removeAttribute("usuEditar");
+            } else {
+                msg = "No hay usuario que editar";
+            }
+            List<Usuario> listaUsuarios = su.findUsuarioEntities();
+            request.setAttribute("listaUsuarios", listaUsuarios);
+            request.setAttribute("msg", msg);
+            getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
     }
 
     /**

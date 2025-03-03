@@ -21,7 +21,7 @@
             <input type="text" name="apellidos" value="${usuEditar.apellidos}">
             <br>
             <label for="pwd">Contraseña: </label>
-            <input type="password" value="${usuEditar.password}">
+            <input type="password" name="pwd" value="${usuEditar.password}">
             <br>
             <label for="activo">Activar: </label>
             <input type="checkbox" name="activo"

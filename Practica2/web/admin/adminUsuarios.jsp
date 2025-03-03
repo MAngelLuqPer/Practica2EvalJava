@@ -40,10 +40,15 @@
                         </c:otherwise>
                     </c:choose> 
                 </td>
-                <td><a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuario.id}">Editar</a></td><button>Eliminar</button>  </td>
+                <td><a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuario.id}&accion=editar">Editar</a>
+                    <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuario.id}&accion=eliminar">Eliminar</a> 
+                </td>
             </tr>
         </c:forEach>
             </tbody>
          </table>
+        <c:if test="${not empty msg}">
+            <div class="error">${msg}</div>
+        </c:if>
     </body>
 </html>
