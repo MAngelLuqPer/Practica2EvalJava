@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Opinion;
 import modelo.entidades.Usuario;
@@ -42,10 +43,14 @@ public class ControladorInicio extends HttpServlet {
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
             ServicioOpinion so = new ServicioOpinion(emf);
             ServicioUsuario su = new ServicioUsuario(emf);
+            HttpSession sesion = request.getSession();
+            String msg = (String) sesion.getAttribute("msg");
+            sesion.removeAttribute("msg"); // Para que no se muestre en futuras peticiones
             List<ExperienciaViaje> listadoExperiencias = sev.findExperienciaViajeEntities();
             List<Opinion> listadoOpiniones = so.findOpinionEntities();
             List <Usuario> listadoUsuarios = su.findUsuarioEntities();
             emf.close();
+            request.setAttribute("msg", msg);
             request.setAttribute("listadoExperiencias",listadoExperiencias);
             request.setAttribute("listadoOpiniones", listadoOpiniones);
             request.setAttribute("listadoUsuarios", listadoUsuarios);

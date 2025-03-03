@@ -34,11 +34,11 @@ public class Actividad implements Serializable, Comparable<Actividad> {
     @Temporal(TemporalType.DATE)
     private Date fecha;
     private List<String> imagenes;
-    
+
     public Actividad() {
         imagenes = new ArrayList();
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -78,7 +78,7 @@ public class Actividad implements Serializable, Comparable<Actividad> {
     public void setImagenes(List<String> imagenes) {
         this.imagenes = imagenes;
     }
-    
+
     @Override
     public int compareTo(Actividad o) {
         return this.fecha.compareTo(o.fecha);
@@ -108,5 +108,5 @@ public class Actividad implements Serializable, Comparable<Actividad> {
     public String toString() {
         return titulo;
     }
-    
+
 }

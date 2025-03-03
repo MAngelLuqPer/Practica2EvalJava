@@ -11,19 +11,24 @@
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>JSP Page</title>
         <style>
-            .tablaPrincipal {
-                margin: 13px;
+            .enlaces {
+                margin-bottom: 25px;
             }
         </style>
     </head>
     <body>
         <h1>Bienvenido a la web, ${usuario.nombre}</h1>
+        <c:if test="${not empty msg}">
+                    <div class="error">${msg}</div>
+         </c:if>
+                    <p>${usuario.tipo}</p>
         <c:if test="${usuario.tipo == 'admin'}">
             <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios">Administrar usuarios</a>
         </c:if>
             <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias"> Añadir una nueva experiencia</a>
              <c:forEach var="experiencia" items="${listadoExperiencias}">
-            <table border="1" class="tablaPrincipal">
+             <c:if test="${experiencia.publico == true || experiencia.usuario == usuario}">
+                <table border="1" class="tablaPrincipal">
                 <thead>
                 <th>Publicado por... </th>
                 <th>Titulo</th>
@@ -33,7 +38,6 @@
                 </thead>
                 
                 <tbody>
-                        <c:if test="${experiencia.publico == true || experiencia.usuario.id == usuario.id}">
                             <tr>
                                 <td>${experiencia.usuario.nombre}</td>
                                 <td>${experiencia.titulo}</td>
@@ -46,6 +50,9 @@
                                             <th>Descripcion</th>
                                             <th>Fecha</th>
                                             <th>Imagenes</th>
+                                            <c:if test="${experiencia.usuario == usuario}">
+                                                <th>Acciones</th>
+                                            </c:if>
                                         </thead>
                                         <tbody>
                                             <c:forEach var="actividad" items="${experiencia.actividades}">
@@ -54,13 +61,16 @@
                                                     <td>${actividad.descripcion}</td>
                                                     <td>${actividad.fecha}</td>
                                                     <td>${actividad.imagenes}</td>
+                                                    <c:if test="${experiencia.usuario == usuario}">
+                                                        <td><a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=eliminarAct">Eliminar</a> | <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=editarAct">Editar </a></td>
+                                                    </c:if>
                                                 </tr>
+                                                
                                             </c:forEach>
                                         </tbody>
                                     </table>
                                 </td>
                             </tr>
-                        </c:if>
                  </tbody>
                  <tfoot>
                      <tr>
@@ -82,8 +92,15 @@
                              </c:if>
                          </c:forEach>
                      </tr>
+                     <tr>
+                         <td colspan="2" style="text-align: center"> <a href="">Añadir opinion</a></td>
+                     </tr>
                  </tfoot>
             </table>
+            <div class="enlaces">
+                <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${experiencia.id}&accion=eliminarExp">Eliminar experiencia</a> | <a href="">Editar experiencia</a>
+            </div>
+               </c:if>
             </c:forEach>
     </body>
 </html>

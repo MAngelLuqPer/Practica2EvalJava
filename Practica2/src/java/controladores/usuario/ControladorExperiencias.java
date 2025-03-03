@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -16,8 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import modelo.entidades.Actividad;
 import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Usuario;
+import modelo.servicio.ServicioActividad;
 import modelo.servicio.ServicioExperienciaViaje;
 
 /**
@@ -50,7 +53,49 @@ public class ControladorExperiencias extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/usuario/crearExperiencia.jsp").forward(request, response);
+            String accion = request.getParameter("accion");
+            HttpSession sesion = request.getSession();
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
+            ServicioActividad sa = new ServicioActividad(emf);
+            String msg = "";
+        if (accion == null) {
+            getServletContext().getRequestDispatcher("/usuario/crearExperiencia.jsp").forward(request, response);
+        } else if (accion.equals("eliminarExp")) {
+            long id = Long.parseLong(request.getParameter("id"));
+            ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+            try {
+                sev.destroy(id);
+                msg = "Experiencia borrada correctamente";
+            } catch (Exception ex) {
+                msg = "No se ha podido borrar la Experiencia. Pruebe a borrar antes las actividades.";
+            }
+            
+            sesion.setAttribute("msg", msg);    
+            response.sendRedirect("ControladorInicio");
+        } else if (accion.equals("eliminarAct")) {
+
+            long id = Long.parseLong(request.getParameter("id"));
+
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+                try {
+                     em.createNativeQuery("DELETE FROM EXPERIENCIAVIAJE_ACTIVIDAD WHERE actividades_ID ="+ id)
+                    .executeUpdate();
+                     em.getTransaction().commit();
+                    sa.destroy(id);
+                    msg = "La actividad se borro correctamente";
+                } catch (Exception ex) {
+                    msg = "No se ha podido borrar la actividad";
+                }
+                sesion.setAttribute("msg",msg);
+                response.sendRedirect("ControladorInicio");
+        } else if (accion.equals("editarAct")) {
+            long id = Long.parseLong(request.getParameter("id"));
+            sesion.setAttribute("id", id);
+            response.sendRedirect("ControladorEditarAct");
+        }
+
+        
     }
 
     /**
