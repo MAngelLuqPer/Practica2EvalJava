@@ -5,6 +5,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -13,7 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Usuario;
+import modelo.servicio.ServicioExperienciaViaje;
 import modelo.servicio.ServicioUsuario;
 
 /**
@@ -58,6 +61,7 @@ public class ControladorLogin extends HttpServlet {
              EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
              ServicioUsuario su = new ServicioUsuario(emf);
              Usuario usu = su.validarUsuario(email, pwd);
+             
              emf.close();
              if (usu != null) {
                 if (!usu.isActivo()) {

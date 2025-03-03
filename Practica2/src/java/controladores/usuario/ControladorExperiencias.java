@@ -5,7 +5,9 @@
 package controladores.usuario;
 
 import java.io.IOException;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -13,19 +15,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import modelo.entidades.ExperienciaViaje;
-import modelo.entidades.Opinion;
 import modelo.entidades.Usuario;
 import modelo.servicio.ServicioExperienciaViaje;
-import modelo.servicio.ServicioOpinion;
-import modelo.servicio.ServicioUsuario;
 
 /**
  *
  * @author mangel
  */
-@WebServlet(name = "ControladorInicio", urlPatterns = {"/usuario/ControladorInicio"})
-public class ControladorInicio extends HttpServlet {
+@WebServlet(name = "ControladorExperiencias", urlPatterns = {"/usuario/ControladorExperiencias"})
+public class ControladorExperiencias extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,21 +36,7 @@ public class ControladorInicio extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
-            ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
-            ServicioOpinion so = new ServicioOpinion(emf);
-            ServicioUsuario su = new ServicioUsuario(emf);
-            List<ExperienciaViaje> listadoExperiencias = sev.findExperienciaViajeEntities();
-            List<Opinion> listadoOpiniones = so.findOpinionEntities();
-            List <Usuario> listadoUsuarios = su.findUsuarioEntities();
-            emf.close();
-            request.setAttribute("listadoExperiencias",listadoExperiencias);
-            request.setAttribute("listadoOpiniones", listadoOpiniones);
-            request.setAttribute("listadoUsuarios", listadoUsuarios);
-            getServletContext().getRequestDispatcher("/usuario/inicio.jsp").forward(request, response);
-    }
+   
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -64,7 +50,7 @@ public class ControladorInicio extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        getServletContext().getRequestDispatcher("/usuario/crearExperiencia.jsp").forward(request, response);
     }
 
     /**
@@ -78,7 +64,34 @@ public class ControladorInicio extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
+            ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+            String msg = "";
+            String titulo = request.getParameter("titulo");
+            String desc = request.getParameter("descripcion");
+            String fechaInicioStr = request.getParameter("fechaInicio");
+            LocalDate fechaInicio = LocalDate.parse(fechaInicioStr);
+            HttpSession sesion = request.getSession();
+            Usuario usuarioAutor =(Usuario) sesion.getAttribute("usuario");
+            Date date = Date.from(fechaInicio.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            boolean privacidad = false;
+            if (request.getParameter("privacidad")!=null) {
+                privacidad = true;
+            }
+            ExperienciaViaje nuevoExpViaje = new ExperienciaViaje();
+            nuevoExpViaje.setTitulo(titulo);
+            nuevoExpViaje.setDescripcion(desc);
+            nuevoExpViaje.setFechaInicio(date);
+            nuevoExpViaje.setPublico(privacidad);
+            nuevoExpViaje.setUsuario(usuarioAutor);
+            try {
+                sev.create(nuevoExpViaje);
+                msg = "Experiencia creada correctamente"+usuarioAutor.getNombre();
+            } catch (Exception e) {
+                msg = "Error al crear la experiencia" + e;
+            }
+            request.setAttribute("msg", msg);
+            getServletContext().getRequestDispatcher("/usuario/crearExperiencia.jsp").forward(request, response);
     }
 
     /**

@@ -33,6 +33,8 @@ public class ExperienciaViaje implements Serializable, Comparable<ExperienciaVia
     @Column(length = 400, nullable = false)
     private String descripcion;
     @Column(nullable = false)
+    private boolean publico;
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fechaInicio;
     @OneToMany
@@ -55,6 +57,16 @@ public class ExperienciaViaje implements Serializable, Comparable<ExperienciaVia
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+
+    public boolean isPublico() {
+        return publico;
+    }
+
+    public void setPublico(boolean publico) {
+        this.publico = publico;
+    }
+    
+    
 
     public String getDescripcion() {
         return descripcion;
