@@ -17,6 +17,7 @@
         </style>
     </head>
     <body>
+        <!-- Rediseñar para implementar header y un cerrar sesion -->
         <h1>Bienvenido a la web, ${usuario.nombre}</h1>
         <c:if test="${not empty msg}">
                     <div class="error">${msg}</div>
@@ -60,13 +61,23 @@
                                                     <td>${actividad.titulo}</td>
                                                     <td>${actividad.descripcion}</td>
                                                     <td>${actividad.fecha}</td>
-                                                    <td>${actividad.imagenes}</td>
-                                                    <c:if test="${experiencia.usuario == usuario}">
-                                                        <td><a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=eliminarAct">Eliminar</a> | <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=editarAct">Editar </a></td>
+                                                    <td>
+                                                    <c:forEach var="imgs" items="${actividad.imagenes}">
+                                                        <img src="${pageContext.request.contextPath}/usuario/ImagenesExperiencia/${imgs}" alt="${pageContext.request.contextPath}/usuario/ImagenesExperiencia/${imgs}" width="150" height="150"/>
+                                                        <br/>
+                                                    </c:forEach>
+                                                    </td>
+                                                    <c:if test="${experiencia.usuario == usuario || usuario.tipo == 'admin'}">
+                                                        <td><a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&idExp=${experiencia.id}&accion=eliminarAct">Eliminar</a> | <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=editarAct">Editar </a></td>
                                                     </c:if>
                                                 </tr>
                                                 
                                             </c:forEach>
+                                            <c:if test="${experiencia.usuario == usuario || usuario.tipo == 'admin'}">
+                                                <tr>
+                                                    <td colspan="5" style="text-align: center"><a href="${pageContext.request.contextPath}/usuario/ControladorCrearAct?idExp=${experiencia.id}">Añadir actividad </a></td>
+                                                </tr>
+                                            </c:if>
                                         </tbody>
                                     </table>
                                 </td>
@@ -80,8 +91,8 @@
                          <th>Usuario</th>
                          <th>Reseña</th>
                      </tr>
-                     <tr>
                          <c:forEach var="opinion" items="${listadoOpiniones}">
+                            <tr>
                              <c:if test="${opinion.experiencia == experiencia}">
                                  <c:forEach var="usuario" items="${listadoUsuarios}">
                                      <c:if test="${usuario.id == opinion.usuario.id}">
@@ -90,16 +101,20 @@
                                  </c:forEach>
                                  <td>${opinion.contenido}</td>
                              </c:if>
+                           </tr>
                          </c:forEach>
-                     </tr>
+
                      <tr>
-                         <td colspan="2" style="text-align: center"> <a href="">Añadir opinion</a></td>
+                         <td colspan="2" style="text-align: center"> <a href="${pageContext.request.contextPath}/usuario/ControladorCrearOpinion?idExp=${experiencia.id}">Añadir opinion</a></td>
+                         <!--Permitir borrar la opinion si eres administrador o eres el propietario de dicha opinion--!>
                      </tr>
                  </tfoot>
             </table>
+           <c:if test="${experiencia.usuario == usuario || usuario.tipo == 'admin'}">
             <div class="enlaces">
-                <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${experiencia.id}&accion=eliminarExp">Eliminar experiencia</a> | <a href="">Editar experiencia</a>
+                <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${experiencia.id}&accion=eliminarExp">Eliminar experiencia</a> | <a href="${pageContext.request.contextPath}/usuario/ControladorEditarExp?idExp=${experiencia.id}">Editar experiencia</a>
             </div>
+            </c:if>
                </c:if>
             </c:forEach>
     </body>

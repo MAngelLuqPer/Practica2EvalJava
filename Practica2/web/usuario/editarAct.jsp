@@ -18,10 +18,10 @@
         <h1>Editar Experiencia</h1>
         <form method="post">
             <label for="titulo">Titulo</label>
-            <input type="text" name="titulo" id="titulo" value="${actEditar.titulo}">
+            <input type="text" name="titulo" id="titulo" value="${actEditar.titulo}" required>
             <br>
             <label for="descripcion">Descripcion</label>
-            <textarea style="overflow:auto;resize:none" rows="5" cols="30" name="descripcion">${actEditar.descripcion}</textarea>
+            <textarea style="overflow:auto;resize:none" rows="5" cols="30" name="descripcion" required>${actEditar.descripcion}</textarea>
             <br>
             <label for="fecha">Fecha</label>
             
@@ -37,7 +37,7 @@
                 }
             %>
             
-            <input type="date" name="fecha" id="fecha" value="<%= fechaFormatted %>">
+            <input type="date" name="fecha" id="fecha" value="<%= fechaFormatted %>" required>
             <br>
             <input type="submit" value="Guardar cambios">
         </form>

@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Opinion;
 import modelo.servicio.exceptions.NonexistentEntityException;
 
@@ -85,6 +86,49 @@ public class ServicioOpinion implements Serializable {
                 em.close();
             }
         }
+    }
+    
+    public void eliminarPorExperiencia(ExperienciaViaje exp) throws NonexistentEntityException {
+    EntityManager em = null;
+    try {
+        em = getEntityManager();
+        em.getTransaction().begin();
+        
+        // Buscar las opiniones asociadas a la experiencia
+        Query query = em.createQuery("SELECT o FROM Opinion o WHERE o.experiencia = :experiencia");
+        query.setParameter("experiencia", exp);
+        
+        List<Opinion> opiniones = query.getResultList();
+        if (opiniones.isEmpty()) {
+            return;  // No hay opiniones para eliminar, por lo que simplemente salimos del método
+        }
+        // Si no hay opiniones asociadas, lanzar excepción
+        if (opiniones.isEmpty()) {
+            throw new NonexistentEntityException("No opinions found for the given experience.");
+        }
+
+        // Eliminar cada opinión encontrada
+        for (Opinion opinion : opiniones) {
+            try {
+                opinion = em.getReference(Opinion.class, opinion.getId()); // Se obtiene la referencia de la opinión
+                opinion.getId(); // Esto lanzará una EntityNotFoundException si la opinión no existe
+                em.remove(opinion); // Se elimina la opinión
+            } catch (EntityNotFoundException enfe) {
+                throw new NonexistentEntityException("The opinion with id " + opinion.getId() + " no longer exists.", enfe);
+            }
+        }
+
+        em.getTransaction().commit();
+    } catch (Exception ex) {
+        if (em != null && em.getTransaction().isActive()) {
+            em.getTransaction().rollback();
+        }
+        throw new RuntimeException("Error removing opinions for the experience", ex);
+    } finally {
+        if (em != null) {
+            em.close();
+        }
+    }
     }
 
     public List<Opinion> findOpinionEntities() {

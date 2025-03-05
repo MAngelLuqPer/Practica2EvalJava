@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import javax.persistence.EntityManager;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -22,6 +22,8 @@ import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Usuario;
 import modelo.servicio.ServicioActividad;
 import modelo.servicio.ServicioExperienciaViaje;
+import modelo.servicio.ServicioOpinion;
+import modelo.servicio.exceptions.NonexistentEntityException;
 
 /**
  *
@@ -63,25 +65,45 @@ public class ControladorExperiencias extends HttpServlet {
         } else if (accion.equals("eliminarExp")) {
             long id = Long.parseLong(request.getParameter("id"));
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
-            try {
-                sev.destroy(id);
-                msg = "Experiencia borrada correctamente";
-            } catch (Exception ex) {
+            ExperienciaViaje evDelOpinion = sev.findExperienciaViaje(id);
+            ServicioOpinion so = new ServicioOpinion(emf);
+            ExperienciaViaje expDel = sev.findExperienciaViaje(id);
+            List<Actividad> actividadesDel = expDel.getActividades();
+            if (!actividadesDel.isEmpty()) {
                 msg = "No se ha podido borrar la Experiencia. Pruebe a borrar antes las actividades.";
+            } else {
+                try {
+                    so.eliminarPorExperiencia(evDelOpinion);
+                } catch (NonexistentEntityException ex) {
+                    System.out.println("No se encontraron opiniones para la experiencia con id " + id);
+                }
+                try {
+                    sev.destroy(id);
+                    msg = "Experiencia borrada correctamente";
+                } catch (Exception ex) {
+                    msg = "No se ha podido borrar la Experiencia. Pruebe a borrar antes las actividades.";
+                }
             }
-            
             sesion.setAttribute("msg", msg);    
             response.sendRedirect("ControladorInicio");
+            
         } else if (accion.equals("eliminarAct")) {
 
             long id = Long.parseLong(request.getParameter("id"));
-
-            EntityManager em = emf.createEntityManager();
-            em.getTransaction().begin();
+            long idExp = Long.parseLong(request.getParameter("idExp"));
+            ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+            Actividad actDel = sa.findActividad(id);
+            ExperienciaViaje expViajeDelAct = sev.findExperienciaViaje(idExp);
+            List<Actividad> actividadesExp = expViajeDelAct.getActividades();
+            actividadesExp.remove(actDel);
+            expViajeDelAct.setActividades(actividadesExp);
                 try {
-                     em.createNativeQuery("DELETE FROM EXPERIENCIAVIAJE_ACTIVIDAD WHERE actividades_ID ="+ id)
-                    .executeUpdate();
-                     em.getTransaction().commit();
+                    sev.edit(expViajeDelAct);
+                } catch (Exception ex) {
+                    msg = "Error al borrar la actividad de la experiencia";
+                }
+            
+                try {
                     sa.destroy(id);
                     msg = "La actividad se borro correctamente";
                 } catch (Exception ex) {

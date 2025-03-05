@@ -53,7 +53,7 @@ public class CrearDatos extends HttpServlet {
         usuario.setApellidos("Pérez");
         usuario.setEmail("pep@iescamas.es");
         usuario.setPassword("1234");
-        usuario.setTipo("nornal");
+        usuario.setTipo("admin");
         usuario.setActivo(true);
         su.create(usuario);
         ExperienciaViaje e1 = new ExperienciaViaje();
