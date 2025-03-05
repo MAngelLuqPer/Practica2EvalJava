@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -57,6 +55,7 @@ public class ControladorEditarAct extends HttpServlet {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
             ServicioActividad sa = new ServicioActividad(emf);
             Actividad actEditar = sa.findActividad(id);
+            emf.close();
             request.setAttribute("actEditar", actEditar);
             request.getSession().setAttribute("actEditar", actEditar);
             getServletContext().getRequestDispatcher("/usuario/editarAct.jsp").forward(request, response);
@@ -97,6 +96,7 @@ public class ControladorEditarAct extends HttpServlet {
         } catch (Exception ex) {
             msg ="Error al editar la actividad";
         }
+        emf.close();
         request.getSession().removeAttribute("actEditar");
         request.getSession().setAttribute("msg", msg);
         response.sendRedirect("ControladorInicio");

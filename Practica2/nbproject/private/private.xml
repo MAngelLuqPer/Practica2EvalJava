@@ -3,15 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/inicio.jsp</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/usuario/ControladorEditarExp.java</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/editarExperiencia.jsp</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/editarAct.jsp</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/modelo/entidades/ExperienciaViaje.java</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/usuario/ControladorExperiencias.java</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/admin/ControladorAdminUsuarios.java</file>
             <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/usuario/ControladorCrearOpinion.java</file>
-            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/usuario/ControladorEditarAct.java</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/consultaPublicaciones.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/filtrarExp.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/bundles/buscador.properties</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/admin/editarUsuario.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/admin/adminUsuarios.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/admin/ControladorAdminUsuarios.java</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/inicio.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/filters/FiltroAdmin.java</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/filters/FiltroUsuario.java</file>
         </group>
     </open-files>
 </project-private>

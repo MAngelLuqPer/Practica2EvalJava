@@ -5,26 +5,20 @@
 package controladores.usuario;
 
 import java.io.IOException;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import modelo.entidades.ExperienciaViaje;
-import modelo.entidades.Opinion;
-import modelo.entidades.Usuario;
-import modelo.servicio.ServicioExperienciaViaje;
-import modelo.servicio.ServicioOpinion;
+
 
 /**
  *
  * @author mangel
  */
-@WebServlet(name = "ControladorCrearOpinion", urlPatterns = {"/usuario/ControladorCrearOpinion"})
-public class ControladorCrearOpinion extends HttpServlet {
+@WebServlet(name = "ControladorFiltrar", urlPatterns = {"/usuario/ControladorMostrarFiltrado"})
+public class ControladorMostrarFiltrado extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,7 +30,10 @@ public class ControladorCrearOpinion extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
 
-
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        getServletContext().getRequestDispatcher("/usuario/consultaPublicaciones.jsp").forward(request, response);
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -49,7 +46,7 @@ public class ControladorCrearOpinion extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                getServletContext().getRequestDispatcher("/usuario/crearOpinion.jsp").forward(request, response);
+       processRequest(request, response);
     }
 
     /**
@@ -63,24 +60,7 @@ public class ControladorCrearOpinion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                String msg = "";
-                long idExp = Long.parseLong(request.getParameter("idExp"));
-                String comentario = request.getParameter("comentario");
-                EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
-                ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
-                HttpSession sesion = request.getSession();
-                Usuario usuSesion = (Usuario)sesion.getAttribute("usuario");
-                ServicioOpinion so = new ServicioOpinion(emf);
-                ExperienciaViaje expComentada = sev.findExperienciaViaje(idExp);
-                Opinion op = new Opinion();
-                op.setContenido(comentario);
-                op.setExperiencia(expComentada);
-                op.setUsuario(usuSesion);
-                so.create(op);
-                msg = "Experiencia comentada correctamente";
-                sesion.setAttribute("msg", msg);
-                emf.close();
-                response.sendRedirect("ControladorInicio");
+        processRequest(request, response);
     }
 
     /**

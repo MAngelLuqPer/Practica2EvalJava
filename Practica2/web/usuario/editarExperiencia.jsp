@@ -6,6 +6,7 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="modelo.entidades.ExperienciaViaje"%>
 <%@page import="java.util.Date"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -27,22 +28,12 @@
                 <textarea id="descripcion" name="descripcion" rows="4" cols="50" required maxlength="400">${expEdit.descripcion}</textarea>
             </div>
 
-               <%
-               
-                ExperienciaViaje expEdit = (ExperienciaViaje) request.getSession().getAttribute("expEdit");
-                Date fecha = expEdit.getFechaInicio();
 
-                String fechaFormatted = "";
-                if (fecha != null) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    fechaFormatted = sdf.format(fecha);
-                }
-            %>
             
             
             <div>
                 <label for="fechaInicio">Fecha de inicio:</label>
-                <input type="date" id="fechaInicio" name="fechaInicio" value="<%=fechaFormatted %>"required>
+                <input type="date" id="fechaInicio" name="fechaInicio" value="<fmt:formatDate value='${expEdit.fechaInicio}' pattern='yyyy-MM-dd'/>"required>
             </div>
 
             <div>
@@ -57,7 +48,7 @@
             Tambien se podra añadir multiples fotos, como en su creacion.
             
             PROBLEMA: Hay que buscar la manera de borrar la foto de la carpeta. PISTA: Buscar comando rm en Java (supongo que existe, como el mkdir).
-            -!>
+            -->
 
             <div>
                 <button type="submit">Guardar cambios</button>

@@ -5,6 +5,8 @@
 package controladores.usuario;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -12,19 +14,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Opinion;
 import modelo.entidades.Usuario;
 import modelo.servicio.ServicioExperienciaViaje;
 import modelo.servicio.ServicioOpinion;
+import modelo.servicio.ServicioUsuario;
 
 /**
  *
  * @author mangel
  */
-@WebServlet(name = "ControladorCrearOpinion", urlPatterns = {"/usuario/ControladorCrearOpinion"})
-public class ControladorCrearOpinion extends HttpServlet {
+@WebServlet(name = "ControladorFiltrarExp", urlPatterns = {"/usuario/ControladorFiltrarExp"})
+public class ControladorFiltrarExp extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,7 +37,37 @@ public class ControladorCrearOpinion extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        String filtro = request.getParameter("filtro");
+        if (filtro == null) {
+            filtro = "";
+        }
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
+        ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+        List<ExperienciaViaje> expFiltrar = sev.findExperienciaViajeEntities();
+        System.out.println("Experiencias obtenidas: " + expFiltrar.size());
+       
+        filtro = filtro.toLowerCase().trim();
+        List<ExperienciaViaje> expFiltrados = new ArrayList();
+        for (ExperienciaViaje e: expFiltrar) {
+            if (e.getTitulo().toLowerCase().contains(filtro) || 
+                    e.getDescripcion().toLowerCase().contains(filtro)) {
+                expFiltrados.add(e);
+            }
+        }
+        System.out.println("Experiencias filtradas: "+expFiltrados.size());
+        ServicioOpinion so = new ServicioOpinion(emf);
+        ServicioUsuario su = new ServicioUsuario(emf);
+        List<Opinion> listadoOpiniones = so.findOpinionEntities();
+        List<Usuario> listadoUsuarios = su.findUsuarioEntities();
+        emf.close();
+        request.setAttribute("listadoUsuarios", listadoUsuarios);
+        request.setAttribute("listadoOpiniones", listadoOpiniones);
+        request.setAttribute("listadoExperiencias", expFiltrados);
+        getServletContext().getRequestDispatcher("/usuario/filtrarExp.jsp").forward(request, response);
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -49,7 +81,7 @@ public class ControladorCrearOpinion extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                getServletContext().getRequestDispatcher("/usuario/crearOpinion.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -63,24 +95,7 @@ public class ControladorCrearOpinion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                String msg = "";
-                long idExp = Long.parseLong(request.getParameter("idExp"));
-                String comentario = request.getParameter("comentario");
-                EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
-                ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
-                HttpSession sesion = request.getSession();
-                Usuario usuSesion = (Usuario)sesion.getAttribute("usuario");
-                ServicioOpinion so = new ServicioOpinion(emf);
-                ExperienciaViaje expComentada = sev.findExperienciaViaje(idExp);
-                Opinion op = new Opinion();
-                op.setContenido(comentario);
-                op.setExperiencia(expComentada);
-                op.setUsuario(usuSesion);
-                so.create(op);
-                msg = "Experiencia comentada correctamente";
-                sesion.setAttribute("msg", msg);
-                emf.close();
-                response.sendRedirect("ControladorInicio");
+        processRequest(request, response);
     }
 
     /**

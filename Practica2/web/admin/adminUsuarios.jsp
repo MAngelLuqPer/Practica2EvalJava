@@ -25,14 +25,14 @@
                 </tr>
             </thead>
             <tbody>
-        <c:forEach var="usuario" items="${listaUsuarios}">
+        <c:forEach var="usuarioTable" items="${listaUsuarios}">
             <tr>
-                <td>${usuario.id}</td>
-                <td>${usuario.nombre}</td>
-                <td>${usuario.apellidos}</td>
-                <td>${usuario.email}</td>
+                <td>${usuarioTable.id}</td>
+                <td>${usuarioTable.nombre}</td>
+                <td>${usuarioTable.apellidos}</td>
+                <td>${usuarioTable.email}</td>
                 <td> <c:choose>
-                        <c:when test="${usuario.activo == true}">
+                        <c:when test="${usuarioTable.activo == true}">
                             Si
                         </c:when>
                         <c:otherwise>
@@ -40,8 +40,16 @@
                         </c:otherwise>
                     </c:choose> 
                 </td>
-                <td><a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuario.id}&accion=editar">Editar</a>
-                    <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuario.id}&accion=eliminar">Eliminar</a> 
+                <td><a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuarioTable.id}&accion=editar">Editar</a>
+                    <c:set var="tieneExp" value="false"/>
+                    <c:forEach var="exp" items="${expUsuarios}">
+                        <c:if test="${exp.usuario == usuarioTable && tieneExp == 'false'}">
+                          <c:set var="tieneExp" value="true"/>
+                        </c:if>
+                    </c:forEach>
+                    <c:if test="${tieneExp == false}">
+                        <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuarioTable.id}&accion=eliminar">Eliminar</a>
+                    </c:if>
                 </td>
             </tr>
         </c:forEach>

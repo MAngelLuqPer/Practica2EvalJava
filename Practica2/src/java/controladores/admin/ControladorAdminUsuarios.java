@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.entidades.Email;
+import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Usuario;
+import modelo.servicio.ServicioExperienciaViaje;
 import modelo.servicio.ServicioUsuario;
 import modelo.servicio.exceptions.NonexistentEntityException;
 
@@ -42,8 +44,12 @@ public class ControladorAdminUsuarios extends HttpServlet {
             throws ServletException, IOException {
        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
        ServicioUsuario su = new ServicioUsuario(emf);
+        ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
        if (request.getParameter("accion") == null) { //Si no se ha pulsado en editar...
+                      
        List<Usuario> listaUsuarios = su.findUsuarioEntities();
+       List<ExperienciaViaje> expUsuarios = sev.findExperienciaViajeEntities();
+       request.setAttribute("expUsuarios",expUsuarios);
        request.setAttribute("listaUsuarios", listaUsuarios);
        getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
        } else if (request.getParameter("accion").equals("editar")){
@@ -63,6 +69,10 @@ public class ControladorAdminUsuarios extends HttpServlet {
                msg = "Error al borrar el usuario";
            }
            List<Usuario> listaUsuarios = su.findUsuarioEntities();
+           List<ExperienciaViaje> expUsuarios = sev.findExperienciaViajeEntities();
+           emf.close();
+           
+           request.setAttribute("expUsuarios",expUsuarios);
            request.setAttribute("listaUsuarios", listaUsuarios);
            request.setAttribute("msg",msg);
            getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
@@ -125,6 +135,7 @@ public class ControladorAdminUsuarios extends HttpServlet {
                 msg = "No hay usuario que editar";
             }
             List<Usuario> listaUsuarios = su.findUsuarioEntities();
+            emf.close();
             request.setAttribute("listaUsuarios", listaUsuarios);
             request.setAttribute("msg", msg);
             getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);

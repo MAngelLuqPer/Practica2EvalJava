@@ -153,10 +153,11 @@ public class ControladorExperiencias extends HttpServlet {
             nuevoExpViaje.setUsuario(usuarioAutor);
             try {
                 sev.create(nuevoExpViaje);
-                msg = "Experiencia creada correctamente"+usuarioAutor.getNombre();
+                msg = "Experiencia creada correctamente";
             } catch (Exception e) {
                 msg = "Error al crear la experiencia" + e;
             }
+            emf.close();
             request.setAttribute("msg", msg);
             getServletContext().getRequestDispatcher("/usuario/crearExperiencia.jsp").forward(request, response);
     }

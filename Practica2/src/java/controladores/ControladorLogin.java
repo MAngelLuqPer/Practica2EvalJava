@@ -5,7 +5,6 @@
 package controladores;
 
 import java.io.IOException;
-import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -14,9 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Usuario;
-import modelo.servicio.ServicioExperienciaViaje;
 import modelo.servicio.ServicioUsuario;
 
 /**

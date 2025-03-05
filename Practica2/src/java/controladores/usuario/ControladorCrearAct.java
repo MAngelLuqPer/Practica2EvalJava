@@ -63,8 +63,6 @@ public class ControladorCrearAct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        long idExp = Long.parseLong(request.getParameter("idExp"));
-//        request.setAttribute("idExp", idExp);
         getServletContext().getRequestDispatcher("/usuario/crearActividad.jsp").forward(request, response);
     }
 
@@ -130,6 +128,7 @@ public class ControladorCrearAct extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(ControladorCrearAct.class.getName()).log(Level.SEVERE, null, ex);
         }
+         emf.close();
          response.sendRedirect("ControladorInicio");
     }
 

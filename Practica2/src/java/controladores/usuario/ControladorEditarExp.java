@@ -52,6 +52,7 @@ public class ControladorEditarExp extends HttpServlet {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
             ExperienciaViaje expEdit = sev.findExperienciaViaje(id);
+            emf.close();
             request.getSession().setAttribute("expEdit", expEdit);
             getServletContext().getRequestDispatcher("/usuario/editarExperiencia.jsp").forward(request, response);
     }
@@ -93,6 +94,7 @@ public class ControladorEditarExp extends HttpServlet {
         } catch (Exception ex) {
             msg="Error al editar la experiencia";
         }
+        emf.close();
         sesion.setAttribute("msg", msg);
         response.sendRedirect("ControladorInicio");
     }

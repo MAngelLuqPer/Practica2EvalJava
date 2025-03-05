@@ -4,9 +4,11 @@
     Author     : mangel
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@page import="modelo.entidades.Actividad"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
+
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -24,20 +26,9 @@
             <textarea style="overflow:auto;resize:none" rows="5" cols="30" name="descripcion" required>${actEditar.descripcion}</textarea>
             <br>
             <label for="fecha">Fecha</label>
-            
-            <%
-               
-                Actividad actEditar = (Actividad) request.getAttribute("actEditar");
-                Date fecha = actEditar.getFecha();
 
-                String fechaFormatted = "";
-                if (fecha != null) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    fechaFormatted = sdf.format(fecha);
-                }
-            %>
             
-            <input type="date" name="fecha" id="fecha" value="<%= fechaFormatted %>" required>
+            <input type="date" name="fecha" id="fecha" value="<fmt:formatDate value='${actEditar.fecha}' pattern='yyyy-MM-dd'/>" required>
             <br>
             <input type="submit" value="Guardar cambios">
         </form>

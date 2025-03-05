@@ -13,7 +13,6 @@
     </head>
     <body>
         <h1>Crear actividad</h1>
-        <p> Añadiendo actividad a la publicacion con ID ${idExp} </p> <!-- Debug -->
         <form method="post" enctype="multipart/form-data">
             <label for="titulo">Titulo</label>
             <input type="text" name="titulo" id="titulo" required>

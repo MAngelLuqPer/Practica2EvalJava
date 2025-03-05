@@ -71,7 +71,9 @@ public class ControladorRegister extends HttpServlet {
                 } else {
                     error = "El email que se desea registrar ya existe";
                 }
+                emf.close();
             }
+            
             request.setAttribute("error",error);
             getServletContext().getRequestDispatcher("/registro.jsp").forward(request, response);
     }
