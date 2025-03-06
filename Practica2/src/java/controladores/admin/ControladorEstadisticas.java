@@ -5,12 +5,22 @@
 package controladores.admin;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.entidades.Actividad;
+import modelo.entidades.ExperienciaViaje;
+import modelo.entidades.Usuario;
+import modelo.servicio.ServicioActividad;
+import modelo.servicio.ServicioExperienciaViaje;
+import modelo.servicio.ServicioUsuario;
 
 /**
  *
@@ -41,7 +51,41 @@ public class ControladorEstadisticas extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         getServletContext().getRequestDispatcher("/admin/estadisticas.jsp").forward(request, response);
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
+            ServicioUsuario su = new ServicioUsuario(emf);
+            ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+            ServicioActividad sa = new ServicioActividad(emf);
+            List<Usuario> listaUsuarios = su.findUsuarioEntities();
+            
+            
+            String fechaInicioStr = request.getParameter("fechaInicio");
+            String fechaFinStr = request.getParameter("fechaFinal");
+            List<ExperienciaViaje> listadoExpFiltrado;
+            if (fechaInicioStr != null && fechaFinStr != null) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date fechaInicio = sdf.parse(fechaInicioStr);
+                    Date fechaFin = sdf.parse(fechaFinStr);
+                    if (fechaInicio.after(fechaFin)) {
+                        request.setAttribute("error", "La fecha de inicio no puede ser mayor que la fecha de fin.");
+                        listadoExpFiltrado = sev.findExperienciaViajeEntities();
+                    } else {
+                        listadoExpFiltrado = sev.findExperienciasByFecha(fechaInicio, fechaFin);
+                        System.out.println("Filtrados: " + listadoExpFiltrado.size());
+                    }
+                } catch (Exception e) {
+                    request.setAttribute("error", "Error al procesar las fechas. Verifica el formato.");
+                    listadoExpFiltrado = sev.findExperienciaViajeEntities();
+                }
+            } else {
+                listadoExpFiltrado = sev.findExperienciaViajeEntities();
+            }
+
+            
+            
+            request.setAttribute("listadoExp", listadoExpFiltrado);
+            request.setAttribute("listaUsuarios", listaUsuarios);
+            getServletContext().getRequestDispatcher("/admin/estadisticas.jsp").forward(request, response);
     }
 
     /**
@@ -55,7 +99,6 @@ public class ControladorEstadisticas extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**

@@ -93,7 +93,6 @@ public class ControladorAdminUsuarios extends HttpServlet {
             Usuario usuEditado = (Usuario) request.getSession().getAttribute("usuEditar");
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
             ServicioUsuario su = new ServicioUsuario(emf);
-            ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
             String msg = "";
             if (usuEditado != null) {
 
@@ -136,9 +135,7 @@ public class ControladorAdminUsuarios extends HttpServlet {
                 msg = "No hay usuario que editar";
             }
             List<Usuario> listaUsuarios = su.findUsuarioEntities();
-            List<ExperienciaViaje> expUsuarios = sev.findExperienciaViajeEntities();
             emf.close();
-            request.setAttribute("expUsuarios",expUsuarios);
             request.setAttribute("listaUsuarios", listaUsuarios);
             request.setAttribute("msg", msg);
             getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);

@@ -4,6 +4,7 @@
 package modelo.servicio;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -163,4 +164,15 @@ public class ServicioExperienciaViaje implements Serializable {
         }
     }
     
+    public List<ExperienciaViaje> findExperienciasByFecha(Date fechaInicio, Date fechaFin) {
+    EntityManager em = getEntityManager();
+    try {
+        return em.createQuery("SELECT e FROM ExperienciaViaje e WHERE e.fechaInicio BETWEEN :inicio AND :fin", ExperienciaViaje.class)
+                .setParameter("inicio", fechaInicio)
+                .setParameter("fin", fechaFin)
+                .getResultList();
+    } finally {
+        em.close();
+    }
+}
 }

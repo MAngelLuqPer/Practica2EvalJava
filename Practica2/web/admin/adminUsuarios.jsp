@@ -4,6 +4,7 @@
     Author     : mangel
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -41,13 +42,8 @@
                     </c:choose> 
                 </td>
                 <td><a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuarioTable.id}&accion=editar">Editar</a>
-                    <c:set var="tieneExp" value="false"/>
-                    <c:forEach var="exp" items="${expUsuarios}">
-                        <c:if test="${exp.usuario == usuarioTable && tieneExp == 'false'}">
-                          <c:set var="tieneExp" value="true"/>
-                        </c:if>
-                    </c:forEach>
-                    <c:if test="${tieneExp == false}">
+                    
+                    <c:if test="${fn:length(usuarioTable.experiencias) eq 0}">
                         <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios?id=${usuarioTable.id}&accion=eliminar">Eliminar</a>
                     </c:if>
                 </td>

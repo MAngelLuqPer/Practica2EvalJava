@@ -8,6 +8,13 @@
             <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/filters/FiltroUsuario.java</file>
             <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/filtrarExp.jsp</file>
             <file>file:/home/mangel/NetBeansProjects/Practica2/web/usuario/inicio.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/admin/ControladorAdminUsuarios.java</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/filters/FiltroAdmin.java</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/bundles/buscador.properties</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/src/java/controladores/admin/ControladorEstadisticas.java</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/admin/estadisticas.jsp</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/js/grafica.js</file>
+            <file>file:/home/mangel/NetBeansProjects/Practica2/web/styles/grafica.css</file>
         </group>
     </open-files>
 </project-private>
