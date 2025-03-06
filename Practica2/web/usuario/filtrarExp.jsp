@@ -35,7 +35,7 @@
                                 <td>${experiencia.usuario.nombre}</td>
                                 <td>${experiencia.titulo}</td>
                                 <td>${experiencia.descripcion}</td>
-                                <td><fmt:formatDate value='${experiencia.fechaInicio}' pattern='yyyy-MM-dd'/></td>
+                                <td><fmt:formatDate value='${experiencia.fechaInicio}' pattern="${pageContext.request.locale.language == 'es' ? 'dd/MM/yyyy' : 'MM/dd/yyyy'}"/></td>
                                 <td>
                                     <table border="2">
                                         <thead>
@@ -52,7 +52,7 @@
                                                 <tr>
                                                     <td>${actividad.titulo}</td>
                                                     <td>${actividad.descripcion}</td>
-                                                    <td><fmt:formatDate value='${actividad.fecha}' pattern='yyyy-MM-dd'/></td>
+                                                        <td><fmt:formatDate value='${actividad.fecha}' pattern="${pageContext.request.locale.language == 'es' ? 'dd/MM/yyyy' : 'MM/dd/yyyy'}"/></td>
                                                     <td>
                                                     <c:forEach var="imgs" items="${actividad.imagenes}">
                                                         <img src="${pageContext.request.contextPath}/usuario/ImagenesExperiencia/${imgs}" alt="${pageContext.request.contextPath}/usuario/ImagenesExperiencia/${imgs}" width="150" height="150"/>

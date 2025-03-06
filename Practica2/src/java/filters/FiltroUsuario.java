@@ -37,7 +37,6 @@ public class FiltroUsuario implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpSession sesion = req.getSession();
             Usuario usuario = (Usuario)sesion.getAttribute("usuario");
-            String rol = usuario.getTipo();
             if (usuario == null) {
                 res.sendRedirect(req.getServletContext().getContextPath()+"/ControladorLogin");
                 return;

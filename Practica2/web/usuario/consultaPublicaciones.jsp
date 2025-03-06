@@ -11,9 +11,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>JSP Page</title>
+        <title>Filtrar experiencias</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="../js/filtrarEmpleados.js"></script>
+        <script src="../js/filtrarExp.js"></script>
     </head>
   <body onload="filtrar()">
         <h1><fmt:message key="tituloBuscar" bundle="${traduccion}"/></h1>

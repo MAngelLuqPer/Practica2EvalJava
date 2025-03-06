@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Filter.java to edit this template
  */
-package filtro;
+package filters;
 
 import java.io.IOException;
 import javax.servlet.DispatcherType;
@@ -33,14 +33,18 @@ public class FiltroAdmin implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpSession sesion = req.getSession();
             Usuario usuario = (Usuario)sesion.getAttribute("usuario");
-            String rol = usuario.getTipo();
+            String rol ="";
             if (usuario == null) {
                 res.sendRedirect(req.getServletContext().getContextPath()+"/ControladorLogin");
                 return;
-            } else if (!rol.equals("admin")) {
-                res.sendRedirect(req.getServletContext().getContextPath()+"/usuario/ControladorInicio");
-                return;
+            } else {
+                rol = usuario.getTipo();
+                if (!rol.equals("admin")) {
+                    res.sendRedirect(req.getServletContext().getContextPath()+"/usuario/ControladorInicio");
+                    return;
+                }
             }
+            
             chain.doFilter(request, response);
         
     }

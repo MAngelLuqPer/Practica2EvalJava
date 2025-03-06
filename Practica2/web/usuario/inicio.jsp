@@ -26,6 +26,7 @@
                     <p>${usuario.tipo}</p>
         <c:if test="${usuario.tipo == 'admin'}">
             <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios">Administrar usuarios</a>
+            <a href="${pageContext.request.contextPath}/admin/ControladorEstadisticas">Mostrar estadisticas</a>
         </c:if>
             <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias"> Añadir una nueva experiencia</a>
             <a href="${pageContext.request.contextPath}/usuario/ControladorMostrarFiltrado">Buscar publicaciones</a>
