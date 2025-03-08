@@ -1,5 +1,5 @@
 # Practica2EvalJava
-Práctica final del 2º timestre.
+## Práctica final del 2º timestre.
 Ejercicio Práctico para la Segunda Evaluación.
 Web para compartir experiencias de viajes.
 Se pretende desarrollar una aplicación web con tecnología JavaEE para que los usuarios puedan
@@ -35,9 +35,7 @@ también un servicio REST que permitirá consultar los datos de todas las experi
 actividades.
 
 El acceso a las bases de datos se podrá realizar con JPA (recomendado) o con JDBC.
-Práctica para la 2a Evaluación. 19/02/2025
 
-Desarrollo Web en Entorno Servidor 1
 
 Se valorará la separación entre modelo, vista y controlador, así como el uso de estructuras de
 alto nivel (taglibs y expresiones EL) y en general, la limpieza del código.
