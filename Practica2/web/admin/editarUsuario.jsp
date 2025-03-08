@@ -10,27 +10,25 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Editar ${usuEditar.nombre}</title>
+        <link rel="stylesheet" type="text/css" href="../styles/editarUsuario.css">
     </head>
     <body>
         <h1>Editar usuario ${usuEditar.nombre}</h1>
         <form method="post">
             <label for="nombre">Nombre: </label>
             <input type="text" name="nombre" value="${usuEditar.nombre}" required>
-            <br>
             <label for="apellidos">Apellidos: </label>
             <input type="text" name="apellidos" value="${usuEditar.apellidos}" required>
-            <br>
             <label for="pwd">Contraseña: </label>
             <input type="password" name="pwd" value="${usuEditar.password}"required>
-            <br>
             <label for="activo">Activar: </label>
             <input type="checkbox" name="activo"
                         <c:if test="${usuEditar.activo == true}"> 
                            checked
                         </c:if>
             >
-            <br>
             <input type="submit" value="Modificar usuario">
         </form>
+            <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios">Volver</a>
     </body>
 </html>

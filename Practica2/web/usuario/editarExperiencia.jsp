@@ -12,6 +12,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/editarExperiencia.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>JSP Page</title>
     </head>
@@ -54,5 +55,6 @@
                 <button type="submit">Guardar cambios</button>
             </div>
         </form>
+            <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver</a>
     </body>
 </html>

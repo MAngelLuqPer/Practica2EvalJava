@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/editarUsuario.css">
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/highcharts-3d.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -16,6 +17,7 @@
         <script src="https://code.highcharts.com/modules/accessibility.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Estadisticas</title>
+        
        <script>
             datos = [
                     <c:forEach var="usu" items="${listaUsuarios}" varStatus="status">
@@ -51,7 +53,12 @@
 
             <button type="submit">Filtrar</button>
         </form>
-       
+        <c:if test="${not empty msg}">
+            <div class="fechas">${msg}</div>
+        </c:if>
+        <c:if test="${not empty error}">
+            <div class="error">${error}</div>
+        </c:if>
         <figure class="highcharts-figure">
             <div id="containerExp"></div>
             <p class="highcharts-description">

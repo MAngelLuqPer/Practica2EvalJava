@@ -13,6 +13,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/editarAct.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>JSP Page</title>
     </head>
@@ -26,12 +27,12 @@
             <textarea style="overflow:auto;resize:none" rows="5" cols="30" name="descripcion" required>${actEditar.descripcion}</textarea>
             <br>
             <label for="fecha">Fecha</label>
-
-            
+            <!--uso de fmt-formatdate para mostrar la fecha de una forma u otra-->
             <input type="date" name="fecha" id="fecha" value="<fmt:formatDate value='${actEditar.fecha}' pattern='yyyy-MM-dd'/>" required>
             <br>
             <input type="submit" value="Guardar cambios">
         </form>
+            <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver</a>
         <c:if test="${not empty msg}">
             <div class="error">${msg}</div>
         </c:if>

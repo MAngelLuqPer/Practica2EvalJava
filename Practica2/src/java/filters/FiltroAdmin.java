@@ -21,6 +21,7 @@ import modelo.entidades.Usuario;
 /**
  *
  * @author mangel
+ * Filtro sencillo encargado de las peticiones a los controladores /admin
  */
 @WebFilter(filterName = "FiltroAdmin", urlPatterns = {"/admin/*"}, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ERROR, DispatcherType.INCLUDE})
 public class FiltroAdmin implements Filter {
@@ -34,11 +35,13 @@ public class FiltroAdmin implements Filter {
             HttpSession sesion = req.getSession();
             Usuario usuario = (Usuario)sesion.getAttribute("usuario");
             String rol ="";
+            //Si el usuario de la sesion es null, se le redirigira al login
             if (usuario == null) {
                 res.sendRedirect(req.getServletContext().getContextPath()+"/ControladorLogin");
                 return;
-            } else {
+            } else { //Si existe el usuario en la sesion...
                 rol = usuario.getTipo();
+                //Se obtiene el tipo de usuario que es, y si no es admin, se le redirige a la pagina principal
                 if (!rol.equals("admin")) {
                     res.sendRedirect(req.getServletContext().getContextPath()+"/usuario/ControladorInicio");
                     return;

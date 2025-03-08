@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/crearOpinion.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>JSP Page</title>
     </head>
@@ -19,5 +20,6 @@
             <br>
             <input type="submit" value="Publicar comentario">
         </form>
+        <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver</a>
     </body>
 </html>

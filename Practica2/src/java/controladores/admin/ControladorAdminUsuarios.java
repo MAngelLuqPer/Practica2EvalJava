@@ -1,7 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+ * Controlador encargado de toda la seccion de administrar usuario (editar, eliminar y vista) 
+*/
 package controladores.admin;
 
 import Utilidades.Utilidades;
@@ -40,28 +39,32 @@ public class ControladorAdminUsuarios extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+    
+    //Esto es un controlador monolito, es decir, se encarga de todas las opciones de editar usuario
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
        ServicioUsuario su = new ServicioUsuario(emf);
         ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
        if (request.getParameter("accion") == null) { //Si no se ha pulsado en editar...
-                      
        List<Usuario> listaUsuarios = su.findUsuarioEntities();
        List<ExperienciaViaje> expUsuarios = sev.findExperienciaViajeEntities();
+       //Se va a la vista con los usuarios y las experiencias para mostrarlo en las tablas
        request.setAttribute("expUsuarios",expUsuarios);
        request.setAttribute("listaUsuarios", listaUsuarios);
        getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);
-       } else if (request.getParameter("accion").equals("editar")){
+       } else if (request.getParameter("accion").equals("editar")){ // Si se ha pulsado en editar...
+           //Se recoge el id de la URL, se busca el usuario con dicha id y se envia a la vista de edicion
            long id = Long.parseLong(request.getParameter("id"));
            Usuario usuEditar = su.findUsuario(id);
            request.setAttribute("usuEditar", usuEditar);
            request.getSession().setAttribute("usuEditar", usuEditar);
            getServletContext().getRequestDispatcher("/admin/editarUsuario.jsp").forward(request, response);
-       } else {
+       } else { //Si no es ni editar ni es null, significa que se ha pulsado en eliminar...
            long id = Long.parseLong(request.getParameter("id"));
            String msg = "";
            try {
+               //Se intenta destruir el usuario con el id recogido por la URL
                su.destroy(id);
                msg = "El usuario se ha borrado correctamente.";
            } catch (NonexistentEntityException ex) {
@@ -71,7 +74,8 @@ public class ControladorAdminUsuarios extends HttpServlet {
            List<Usuario> listaUsuarios = su.findUsuarioEntities();
            List<ExperienciaViaje> expUsuarios = sev.findExperienciaViajeEntities();
            emf.close();
-           
+           /*Una vez borrado, se recoge otra vez la lista de los usuarios y las experiencias para volver a mostrar
+             el listado de todos los usuarios*/
            request.setAttribute("expUsuarios",expUsuarios);
            request.setAttribute("listaUsuarios", listaUsuarios);
            request.setAttribute("msg",msg);
@@ -90,12 +94,14 @@ public class ControladorAdminUsuarios extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Controla las acciones post del formulario para editar usuarios
+        //Pilla el usuario asignado en la sesion a la hora de pulsar en editar.
             Usuario usuEditado = (Usuario) request.getSession().getAttribute("usuEditar");
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
             ServicioUsuario su = new ServicioUsuario(emf);
             String msg = "";
             if (usuEditado != null) {
-
+                //Se recoge los campos del form
                 String nombre = request.getParameter("nombre");
                 String apellidos = request.getParameter("apellidos");
                 String pwd = request.getParameter("pwd");
@@ -104,11 +110,18 @@ public class ControladorAdminUsuarios extends HttpServlet {
                     activo = true;
                 }
                 boolean estadoAnterior = usuEditado.isActivo();
+                //Se edita el usuario recogido anteriormente
                 usuEditado.setNombre(nombre);
                 usuEditado.setApellidos(apellidos);
                 usuEditado.setPassword(pwd);
                 usuEditado.setActivo(activo);
+                //LOGICA PARA ENVIAR EMAILS
                     if (!estadoAnterior && activo) {
+                     /*Se crea un nuevo objeto tipo Email, se establece un titulo de correo fijo
+                        el contenido del email enviado contendra un texto fijo junto al nombre del usuario que se vaya a activar
+                        la direccion de correo (from) ponemos el correo que queramos que sea el emisor del e-mail
+                        Luego con las utilidades del e-mail, hacemos un e.enviarEmail, que contendra el e-mail del from 
+                        y una contraseña generada por Google especifica para aplicaciones*/
                      Email email = new Email();
                      email.setTo(usuEditado.getEmail());
                      email.setSubject("Cuenta activada correctamente");
@@ -125,6 +138,7 @@ public class ControladorAdminUsuarios extends HttpServlet {
                    }
                 
                 try {
+                    //Se intenta editar el usuario...
                     su.edit(usuEditado);
                     msg = "Usuario editado correctamente.";
                 } catch (Exception ex) {
@@ -136,6 +150,7 @@ public class ControladorAdminUsuarios extends HttpServlet {
             }
             List<Usuario> listaUsuarios = su.findUsuarioEntities();
             emf.close();
+            //Cuando se termien toda la logica de edicion, se volvera a la vista con la tabla de todos los usuarios
             request.setAttribute("listaUsuarios", listaUsuarios);
             request.setAttribute("msg", msg);
             getServletContext().getRequestDispatcher("/admin/adminUsuarios.jsp").forward(request, response);

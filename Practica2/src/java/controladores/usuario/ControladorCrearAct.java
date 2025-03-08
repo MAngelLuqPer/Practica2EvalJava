@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Controlador encargado de crear una actividad relacionada a una ExperienciaViaje
  */
 package controladores.usuario;
 
@@ -63,6 +62,7 @@ public class ControladorCrearAct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Redirige a la vista automaticamente
         getServletContext().getRequestDispatcher("/usuario/crearActividad.jsp").forward(request, response);
     }
 
@@ -77,7 +77,9 @@ public class ControladorCrearAct extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            //Recoge el id de la experiencia a la que va a pertenecer la actividad
             long idExp = Long.parseLong(request.getParameter("idExp"));
+            //Recoge del formulario todo lo enviado para crear la actividad
             String titulo = request.getParameter("titulo");
             String desc = request.getParameter("descripcion");
             String fechaStr = request.getParameter("fecha");
@@ -86,21 +88,29 @@ public class ControladorCrearAct extends HttpServlet {
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date fechaInicio = null;
+            //Se intenta formatear la fecha
             try {
                 fechaInicio = sdf.parse(fechaStr);
             } catch (ParseException ex) {
                 System.out.println(ex);
             }
+            //Se obtiene la ruta del directorio en donde se quiere guardar las fotos
             String path = getServletContext().getRealPath("/usuario/ImagenesExperiencia");
             System.out.println(" **** Path: " + path);
             List<String> imgs = new ArrayList<>();
+            //Se obtiene una coleccion con todas las fotos recolectadas del formulario
             Collection<Part> partes = request.getParts();
+            //Se iteran dicha informacion
             for (Part fichero : partes) {
             if ("imagenes".equals(fichero.getName()) && fichero.getSize() > 0) {
+                /*Se establece el nombre de la imagen que se va a almacenar y su ruta
+                el nombre del fichero empezara por la ID de la experiencia a la que pertenece la actividad
+                separado por _ y seguido con el nombre del fichero enviado*/
                 String nombreFichero = path + "/" + idExp + "_" + fichero.getSubmittedFileName();
                 InputStream contenido = fichero.getInputStream();
+                //Se crea el fichero de salida con el nombre y la ruta anteriormente compuesto
                 FileOutputStream ficheroSalida = new FileOutputStream(nombreFichero);
-                
+                //Se escribe la informacion en el fichero que se le paso a FileOutputStream, anteriormente recogido en "contenido"
                 byte[] buffer = new byte[8192];
                 while (contenido.available() > 0) {
                     int bytesLeidos = contenido.read(buffer);
@@ -109,21 +119,24 @@ public class ControladorCrearAct extends HttpServlet {
                 
                 ficheroSalida.close();
                 contenido.close();
-                
+                //Se añade la ruta de la foto en el array que contiene la actividad
                 imgs.add(idExp + "_" + fichero.getSubmittedFileName());
             }
         }
-
+            //Se obtiene el objeto ExperienciaViaje a la que esta asociada la experiencia
             ExperienciaViaje evAddAct = sev.findExperienciaViaje(idExp);
             Actividad nuevaAct = new Actividad();
             nuevaAct.setTitulo(titulo);
             nuevaAct.setDescripcion(desc);
             nuevaAct.setFecha(fechaInicio);
             nuevaAct.setImagenes(imgs);
+            //Una vez se crea el objeto Actividad con todos sus atributos, se añade a la DB
             sa.create(nuevaAct);
+            //Se saca la lista de actividades de la experiencia y se le añade la nueva actividad creada
             List<Actividad> expActEdit = evAddAct.getActividades();
             expActEdit.add(nuevaAct);
         try {
+            //Se intenta modificar la experiencia para añadir la nueva actividad asociada
             sev.edit(evAddAct);
         } catch (Exception ex) {
             Logger.getLogger(ControladorCrearAct.class.getName()).log(Level.SEVERE, null, ex);

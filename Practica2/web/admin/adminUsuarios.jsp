@@ -11,6 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Panel de administracion</title>
+        <link rel="stylesheet" type="text/css" href="../styles/adminUsuarios.css">
     </head>
     <body>
         <h1>Administración de usuarios</h1>
@@ -51,6 +52,7 @@
         </c:forEach>
             </tbody>
          </table>
+        <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver</a>
         <c:if test="${not empty msg}">
             <div class="error">${msg}</div>
         </c:if>

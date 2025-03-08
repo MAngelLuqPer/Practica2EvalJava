@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/inicio.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>JSP Page</title>
         <style>
@@ -29,12 +30,12 @@
                 <th><fmt:message key="fechaDeInicio" bundle="${traduccion}"/></th>
                 <th><fmt:message key="actividades" bundle="${traduccion}"/></th>
                 </thead>
-                
                 <tbody>
                             <tr>
                                 <td>${experiencia.usuario.nombre}</td>
                                 <td>${experiencia.titulo}</td>
                                 <td>${experiencia.descripcion}</td>
+                                <!--Mostrara la fehca de un formato u otro dependiendo del idioma del navegador-->
                                 <td><fmt:formatDate value='${experiencia.fechaInicio}' pattern="${pageContext.request.locale.language == 'es' ? 'dd/MM/yyyy' : 'MM/dd/yyyy'}"/></td>
                                 <td>
                                     <table border="2">

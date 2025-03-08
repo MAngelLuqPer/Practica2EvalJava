@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/crearExperiencia.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Crear nueva experiencia</title>
     </head>
@@ -28,7 +29,7 @@
             <br>
             <input type="submit" value="Crear experiencia">
         </form>
-        <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver a la paágina principal</a>
+        <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver a la página principal</a>
         <c:if test="${not empty msg}">
             <div class="error">${msg}</div>
         </c:if>

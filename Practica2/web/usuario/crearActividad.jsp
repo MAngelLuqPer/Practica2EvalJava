@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="../styles/crearActividad.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Creando una actividad...</title>
     </head>
@@ -26,7 +27,8 @@
             <label for="imagenes">Subir imágenes</label>
             <input type="file" name="imagenes" id="imagenes" multiple accept="image/*">
              <br>
-            <button type="submit">Crear actividad</button>
+            <input type="submit" value="Crear actividad"></input>
         </form>
+       <a href="${pageContext.request.contextPath}/usuario/ControladorInicio">Volver</a>
     </body>
 </html>

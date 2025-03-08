@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Controlador encargado de filtrar la experiencias para devolver los datos correspondientes
+ * ESTE CONTROLADOR SOLO LO RECIBIRA EL JS
  */
 package controladores.usuario;
 
@@ -39,21 +39,25 @@ public class ControladorFiltrarExp extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        //Si no se ha escrito nada en el filtro, se establece una cadena vacia
         String filtro = request.getParameter("filtro");
         if (filtro == null) {
             filtro = "";
         }
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
         ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+        //Se obtiene todas las experiencias para filtrarlas mas adelante
         List<ExperienciaViaje> expFiltrar = sev.findExperienciaViajeEntities();
         System.out.println("Experiencias obtenidas: " + expFiltrar.size());
-       
+       //Eliminamos las mayusculas y espacios del texto a buscar
         filtro = filtro.toLowerCase().trim();
+        //Listado vacio para añadir las experiencias filtradas
         List<ExperienciaViaje> expFiltrados = new ArrayList();
         for (ExperienciaViaje e: expFiltrar) {
+            //Si el titulo o la descripcion en minusculas contiene algunas letras de lo que se desea buscar...
             if (e.getTitulo().toLowerCase().contains(filtro) || 
                     e.getDescripcion().toLowerCase().contains(filtro)) {
+                //Se añade al nuevo listado de experiencias
                 expFiltrados.add(e);
             }
         }
@@ -63,6 +67,7 @@ public class ControladorFiltrarExp extends HttpServlet {
         List<Opinion> listadoOpiniones = so.findOpinionEntities();
         List<Usuario> listadoUsuarios = su.findUsuarioEntities();
         emf.close();
+        //Se envia a la vista los datos a mostrar junto a las experiencias filtradas
         request.setAttribute("listadoUsuarios", listadoUsuarios);
         request.setAttribute("listadoOpiniones", listadoOpiniones);
         request.setAttribute("listadoExperiencias", expFiltrados);

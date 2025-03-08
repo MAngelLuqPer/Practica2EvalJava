@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="styles/registro.css">
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Registrar usuario</title>
     </head>
@@ -16,16 +17,12 @@
         <form method="post">
             <label for="email">Email:</label>
             <input type="email" name="email" required>
-            <br>
             <label for="nombre">Nombre: </label>
             <input type="text" name="nombre" min="4" max="20" required>
-            <br>
             <label for="apellidos">Apellidos: </label>
             <input type="text" name="apellidos" min="4" max="20" required>
-            <br>
             <label for="pwd">Contraseña: </label>
             <input type="password" name="pwd" required  min="4" max="30">
-            <br>
             <input type="submit" value="Registrar cuenta">
         </form>
         <a href="${pageContext.request.contextPath}/ControladorLogin">Identificarse</a>

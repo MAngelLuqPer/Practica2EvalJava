@@ -1,7 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+* Controlador para editar la experiencia (titulo, desc y fechaInicio) y mostrar las vistas necesarias
+*/
 package controladores.usuario;
 
 import java.io.IOException;
@@ -53,6 +52,7 @@ public class ControladorEditarExp extends HttpServlet {
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
             ExperienciaViaje expEdit = sev.findExperienciaViaje(id);
             emf.close();
+            //Se rescata la experiencia a editar a traves de su ID y se establece en la sesion para reenviarlo a la vista de editar.
             request.getSession().setAttribute("expEdit", expEdit);
             getServletContext().getRequestDispatcher("/usuario/editarExperiencia.jsp").forward(request, response);
     }
@@ -72,23 +72,31 @@ public class ControladorEditarExp extends HttpServlet {
             String msg = "";
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
+            //Se obtienen los campos a editar
             String titulo = request.getParameter("titulo");
             String desc = request.getParameter("descripcion");
             String fechaInicioStr = request.getParameter("fechaInicio");
+            //Se pasa de String a LocalDate
             LocalDate fechaInicio = LocalDate.parse(fechaInicioStr);
+            //Se pasa la fecha de LocalDate a Date, estableciendo la hora de la fecha a 00:00 y poniendole formato a la fecha correspondiente al del sistema.
             Date date = Date.from(fechaInicio.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            //Para controlar si se quiere hacer publico o no, se ha establecido un booleano
+            //Si el checkbox es null, significa que no se ha marcado, por lo que se queda en false
+            //Si tiene contenido, pasara a true
             boolean publico = false;
             if (request.getParameter("publico") != null) {
                 publico = true;
             }
-            
+            //Se obtiene de la sesion la experiencia a editar y se elimina de dicha sesion
             ExperienciaViaje expEdit =(ExperienciaViaje)sesion.getAttribute("expEdit");
             sesion.removeAttribute("expEdit");
+            //Se establecen los nuevos atributos
             expEdit.setTitulo(titulo);
             expEdit.setPublico(publico);
             expEdit.setDescripcion(desc);
             expEdit.setFechaInicio(date);
         try {
+            //Se intenta editar
             sev.edit(expEdit);
             msg="Experiencia editada correctamente";
         } catch (Exception ex) {

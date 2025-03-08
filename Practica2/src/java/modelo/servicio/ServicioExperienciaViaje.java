@@ -163,16 +163,16 @@ public class ServicioExperienciaViaje implements Serializable {
             em.close();
         }
     }
-    
+    //Servicio sencillo encargado de hacer una peticion SQL para buscar entre dos fechas
     public List<ExperienciaViaje> findExperienciasByFecha(Date fechaInicio, Date fechaFin) {
-    EntityManager em = getEntityManager();
-    try {
-        return em.createQuery("SELECT e FROM ExperienciaViaje e WHERE e.fechaInicio BETWEEN :inicio AND :fin", ExperienciaViaje.class)
-                .setParameter("inicio", fechaInicio)
-                .setParameter("fin", fechaFin)
-                .getResultList();
-    } finally {
-        em.close();
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT e FROM ExperienciaViaje e WHERE e.fechaInicio BETWEEN :inicio AND :fin", ExperienciaViaje.class)
+                    .setParameter("inicio", fechaInicio)
+                    .setParameter("fin", fechaFin)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
     }
-}
 }

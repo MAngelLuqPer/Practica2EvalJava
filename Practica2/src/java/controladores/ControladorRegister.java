@@ -54,12 +54,14 @@ public class ControladorRegister extends HttpServlet {
             String apellidos = request.getParameter("apellidos");
             String error = "";
             String pwd = request.getParameter("pwd");
+            //Obliga a que todos los campos sean obligatorios
             if (email == null || pwd == null || nombre == null || apellidos == null) {
                 error = "Rellene todos los campos del registro.";
             } else {
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
                 ServicioUsuario su = new ServicioUsuario(emf);
                 boolean existe = su.buscarUsuarioPorEmail(email);
+                //Se comprueba que el email del usuario no exista
                 if (!existe) {
                     Usuario usuRegistro = new Usuario ();
                     usuRegistro.setEmail(email);
@@ -67,13 +69,14 @@ public class ControladorRegister extends HttpServlet {
                     usuRegistro.setApellidos(apellidos);
                     usuRegistro.setPassword(pwd);
                     su.create(usuRegistro);
+                    //Se crea el usuario y se añade a la DB
                     error = "El usuario se ha registrado correctamente";
                 } else {
                     error = "El email que se desea registrar ya existe";
                 }
                 emf.close();
             }
-            
+            //Se reenvia al registro con el mensaje correspondiente
             request.setAttribute("error",error);
             getServletContext().getRequestDispatcher("/registro.jsp").forward(request, response);
     }

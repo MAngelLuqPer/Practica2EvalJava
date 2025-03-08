@@ -1,0 +1,101 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 7 mar 2025, 20:13:27
+    Author     : mangel
+*/
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f6f7f8;
+    color: #1c1c1c;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #ff4500; /* Color naranja similar al de Reddit */
+    font-size: 24px;
+    text-align: center; /* Centrar el título */
+    margin-bottom: 20px;
+}
+
+/* Estilos para el formulario */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #1c1c1c;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+
+input[type="submit"] {
+    background-color: #ff4500;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+}
+
+
+
+button[type="submit"]:hover {
+    background-color: #e03e00; /* Naranja más oscuro al pasar el mouse */
+}
+
+/* Estilos para el enlace "Volver" */
+a {
+    display: block; /* Convertir en bloque para centrarlo */
+    text-align: center;
+    margin-top: 20px;
+    color: #0079d3; /* Color azul similar a los enlaces de Reddit */
+    text-decoration: none;
+    font-size: 14px;
+}
+
+a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    form {
+        padding: 15px;
+    }
+}

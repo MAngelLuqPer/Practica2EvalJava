@@ -1,0 +1,56 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 7 mar 2025, 20:33:53
+    Author     : mangel
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f6f7f8;
+    color: #1c1c1c;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #ff4500;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #1c1c1c;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#listado {
+    margin-top: 20px;
+}
+
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    div {
+        padding: 15px;
+    }
+}

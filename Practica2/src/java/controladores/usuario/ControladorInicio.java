@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ *  Controlador sencillo encargado de mostrar la pagina principal
  */
 package controladores.usuario;
 
@@ -50,6 +49,7 @@ public class ControladorInicio extends HttpServlet {
             List<Opinion> listadoOpiniones = so.findOpinionEntities();
             List <Usuario> listadoUsuarios = su.findUsuarioEntities();
             emf.close();
+            //Se envian todos los datos a la vista de inicio para mostrar las experiencias, sus opiniones y actividades junto al mensaje que se deba de mostrar.
             request.setAttribute("msg", msg);
             request.setAttribute("listadoExperiencias",listadoExperiencias);
             request.setAttribute("listadoOpiniones", listadoOpiniones);

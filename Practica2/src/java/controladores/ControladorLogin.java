@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Controlador encargado de iniciar sesion y guardar el usuario en la sesion
  */
 package controladores;
 
@@ -51,19 +50,21 @@ public class ControladorLogin extends HttpServlet {
          String email = request.getParameter("email");
          String pwd = request.getParameter("pwd");
          String error = "";
+         //Obliga al usuario a rellenar todos los campos
          if (email == null || pwd == null || email.isEmpty() || pwd.isEmpty()) {
              error = "Contraseña y email obligatorios ";
          }
          else {
              EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
              ServicioUsuario su = new ServicioUsuario(emf);
+             //Se comprueba si existe el usuario con la contraseña con el que se intenta iniciar sesion
              Usuario usu = su.validarUsuario(email, pwd);
              
              emf.close();
-             if (usu != null) {
-                if (!usu.isActivo()) {
+             if (usu != null) { //Si el usuario introducido existe...
+                if (!usu.isActivo()) { //Si no esta activo, mostrara un error
                  error = "El usuario debe de ser activado por un administrador antes. Contacte con el departamento de administacion";
-                } else {
+                } else { //Si esta activo...
                  HttpSession sesion = request.getSession();
                  sesion.setAttribute("usuario",usu);
                  //Uso de la ruta modificada del @WebServlet
@@ -74,6 +75,7 @@ public class ControladorLogin extends HttpServlet {
                  error = "El usuario introducido no existe";
              }
          }
+         //En caso de fallar el login, se mostrara el error
          request.setAttribute("error",error);
          getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
     }

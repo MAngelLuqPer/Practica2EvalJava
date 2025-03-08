@@ -102,11 +102,6 @@ public class ServicioOpinion implements Serializable {
         if (opiniones.isEmpty()) {
             return;  // No hay opiniones para eliminar, por lo que simplemente salimos del método
         }
-        // Si no hay opiniones asociadas, lanzar excepción
-        if (opiniones.isEmpty()) {
-            throw new NonexistentEntityException("No opinions found for the given experience.");
-        }
-
         // Eliminar cada opinión encontrada
         for (Opinion opinion : opiniones) {
             try {

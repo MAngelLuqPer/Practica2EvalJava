@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Controlador sencillo para añadir una opinion relacionada a una experiencia
  */
 package controladores.usuario;
 
@@ -25,16 +24,6 @@ import modelo.servicio.ServicioOpinion;
  */
 @WebServlet(name = "ControladorCrearOpinion", urlPatterns = {"/usuario/ControladorCrearOpinion"})
 public class ControladorCrearOpinion extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -69,13 +58,16 @@ public class ControladorCrearOpinion extends HttpServlet {
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
                 ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
                 HttpSession sesion = request.getSession();
+                //Se obtiene el usuario de la sesion, ya que el usuario logueado sera el autor del comentario
                 Usuario usuSesion = (Usuario)sesion.getAttribute("usuario");
                 ServicioOpinion so = new ServicioOpinion(emf);
+                //Se obtiene la experiencia a la que va a pertenecer la opinion
                 ExperienciaViaje expComentada = sev.findExperienciaViaje(idExp);
                 Opinion op = new Opinion();
                 op.setContenido(comentario);
                 op.setExperiencia(expComentada);
                 op.setUsuario(usuSesion);
+                //Se crea la opinion con todos sus atributos (usuario, comentario y experiencia)
                 so.create(op);
                 msg = "Experiencia comentada correctamente";
                 sesion.setAttribute("msg", msg);

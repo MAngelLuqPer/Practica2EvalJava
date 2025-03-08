@@ -24,6 +24,7 @@ import modelo.entidades.Usuario;
 /**
  *
  * @author mangel
+ * Filtro sencillo encargado del acceso a los controladores de usuario
  */
 @WebFilter(filterName = "FiltroUsuario", urlPatterns = {"/usuario/*"}, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ERROR, DispatcherType.INCLUDE})
 public class FiltroUsuario implements Filter {
@@ -37,6 +38,7 @@ public class FiltroUsuario implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpSession sesion = req.getSession();
             Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+            //Si el usuario de la sesion no existe, se enviara al login
             if (usuario == null) {
                 res.sendRedirect(req.getServletContext().getContextPath()+"/ControladorLogin");
                 return;

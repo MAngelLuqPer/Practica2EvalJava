@@ -11,25 +11,27 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>JSP Page</title>
-        <style>
-            .enlaces {
-                margin-bottom: 25px;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="../styles/inicio.css">
     </head>
     <body>
         <!-- Rediseñar para implementar header y un cerrar sesion -->
-        <h1>Bienvenido a la web, ${usuario.nombre}</h1>
+        <header>
+            <h1>Bienvenido a la web, ${usuario.nombre} (${usuario.tipo})</h1>
+            <nav>
+                <c:if test="${usuario.tipo == 'admin'}">
+                    <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios">Administrar usuarios</a>
+                    <a href="${pageContext.request.contextPath}/admin/ControladorEstadisticas">Mostrar estadisticas</a>
+                </c:if>
+                <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias"> Añadir una nueva experiencia</a>
+                <a href="${pageContext.request.contextPath}/usuario/ControladorMostrarFiltrado">Buscar publicaciones</a>
+            </nav>
+        </header>
+        
         <c:if test="${not empty msg}">
                     <div class="error">${msg}</div>
         </c:if>
-                    <p>${usuario.tipo}</p>
-        <c:if test="${usuario.tipo == 'admin'}">
-            <a href="${pageContext.request.contextPath}/admin/ControladorAdminUsuarios">Administrar usuarios</a>
-            <a href="${pageContext.request.contextPath}/admin/ControladorEstadisticas">Mostrar estadisticas</a>
-        </c:if>
-            <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias"> Añadir una nueva experiencia</a>
-            <a href="${pageContext.request.contextPath}/usuario/ControladorMostrarFiltrado">Buscar publicaciones</a>
+
+
              <c:forEach var="experiencia" items="${listadoExperiencias}">
              <c:if test="${experiencia.publico == true || experiencia.usuario == usuario}">
                 <table border="1" class="tablaPrincipal">
@@ -71,7 +73,7 @@
                                                     </c:forEach>
                                                     </td>
                                                     <c:if test="${experiencia.usuario == usuario || usuario.tipo == 'admin'}">
-                                                        <td><a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&idExp=${experiencia.id}&accion=eliminarAct">Eliminar</a> | <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=editarAct">Editar </a></td>
+                                                        <td><a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&idExp=${experiencia.id}&accion=eliminarAct">Eliminar</a> <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${actividad.id}&accion=editarAct">Editar </a></td>
                                                     </c:if>
                                                 </tr>
                                                 
@@ -115,7 +117,7 @@
             </table>
            <c:if test="${experiencia.usuario == usuario || usuario.tipo == 'admin'}">
             <div class="enlaces">
-                <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${experiencia.id}&accion=eliminarExp">Eliminar experiencia</a> | <a href="${pageContext.request.contextPath}/usuario/ControladorEditarExp?idExp=${experiencia.id}">Editar experiencia</a>
+                <a href="${pageContext.request.contextPath}/usuario/ControladorExperiencias?id=${experiencia.id}&accion=eliminarExp">Eliminar experiencia</a> <a href="${pageContext.request.contextPath}/usuario/ControladorEditarExp?idExp=${experiencia.id}">Editar experiencia</a>
             </div>
             </c:if>
                </c:if>

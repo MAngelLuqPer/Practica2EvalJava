@@ -1,7 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+ *Controlador encargado de enviar la informacion al jsp de graficas y estadisticas, pudiendo filtrar por fechas si se desea
+*/
 package controladores.admin;
 
 import java.io.IOException;
@@ -15,10 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import modelo.entidades.Actividad;
 import modelo.entidades.ExperienciaViaje;
 import modelo.entidades.Usuario;
-import modelo.servicio.ServicioActividad;
 import modelo.servicio.ServicioExperienciaViaje;
 import modelo.servicio.ServicioUsuario;
 
@@ -54,35 +51,44 @@ public class ControladorEstadisticas extends HttpServlet {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("Practica2PU");
             ServicioUsuario su = new ServicioUsuario(emf);
             ServicioExperienciaViaje sev = new ServicioExperienciaViaje(emf);
-            ServicioActividad sa = new ServicioActividad(emf);
             List<Usuario> listaUsuarios = su.findUsuarioEntities();
-            
-            
+            String msg = "";
+            String error = "";
+            //Se recoge del pequeño formulario para filtrar entre fechas, las fechas correspondientes
             String fechaInicioStr = request.getParameter("fechaInicio");
             String fechaFinStr = request.getParameter("fechaFinal");
             List<ExperienciaViaje> listadoExpFiltrado;
+            //Si se ha enviado una fecha a traves del form...
             if (fechaInicioStr != null && fechaFinStr != null) {
                 try {
+                    //Se intenta formatear las fechas recogidas como String anteriormente
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     Date fechaInicio = sdf.parse(fechaInicioStr);
                     Date fechaFin = sdf.parse(fechaFinStr);
+                    //Si la fecha de inicio es antes que la fecha final...
                     if (fechaInicio.after(fechaFin)) {
-                        request.setAttribute("error", "La fecha de inicio no puede ser mayor que la fecha de fin.");
+                        error = "La fecha de inicio no puede ser mayor que la fecha de fin.";
+                        request.setAttribute("error", error);
                         listadoExpFiltrado = sev.findExperienciaViajeEntities();
-                    } else {
+                    } else { //Si las fechas son coherentes...
+                        msg = "Fechas filtradas entre "+fechaInicioStr+" y "+fechaFinStr;
                         listadoExpFiltrado = sev.findExperienciasByFecha(fechaInicio, fechaFin);
                         System.out.println("Filtrados: " + listadoExpFiltrado.size());
                     }
                 } catch (Exception e) {
-                    request.setAttribute("error", "Error al procesar las fechas. Verifica el formato.");
+                    error = "Error al procesar las fechas. Verifica el formato.";
+                    request.setAttribute("error", error);
                     listadoExpFiltrado = sev.findExperienciaViajeEntities();
                 }
             } else {
+                //Si no se ha enviado a traves del formulario las fechas, se devolvera todas las experiencias sin filtrar
                 listadoExpFiltrado = sev.findExperienciaViajeEntities();
             }
 
-            
-            
+            emf.close();
+            //Cuando termine toda la logica de filtrado, se vuelve a la vista con todas las graficas
+            request.setAttribute ("msg",msg);
+            request.setAttribute("error",error);
             request.setAttribute("listadoExp", listadoExpFiltrado);
             request.setAttribute("listaUsuarios", listaUsuarios);
             getServletContext().getRequestDispatcher("/admin/estadisticas.jsp").forward(request, response);
